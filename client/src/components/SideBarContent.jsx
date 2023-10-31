@@ -1,0 +1,71 @@
+import { Box,Button,styled,List,ListItem } from '@mui/material'
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import { SideBar_Data } from '../config/SideBar.config';
+import ComposeMail from './ComposeMail';
+import React,{useState} from 'react';
+import { NavLink, useParams } from 'react-router-dom';
+import { routes } from '../routes/routes';
+
+const ComposeButton = styled(Button)({
+    background:'#c2e7ff',
+    color:'#001d35',
+    padding:15,
+    borderRadius:16,
+    minWidth:140,
+    textTransform:'none'
+})
+
+const Container = styled(Box)({
+    padding:8,
+    '& > ul':{
+        padding:'10px 0 0 5px',
+        fontSize:17,
+        fontWeight:500,
+        cursor:'pointer',
+        '& > a': {
+            textDecoration:'none',
+            color:'inherit'
+        }
+    },
+    '& > ul > a > li > svg' :{
+        marginRight:15
+    }
+})
+
+const SideBarContent = () => {
+
+    const [openDialog,setOpenDialog] = useState(false);
+
+    const { type } = useParams();
+
+    const composeClick = () =>{
+        setOpenDialog(true)
+    }
+  return (
+    <Container>
+        <ComposeButton onClick={composeClick}>
+            <CreateOutlinedIcon/>Compose
+        </ComposeButton>
+        
+        <List>
+            {
+                SideBar_Data.map( (data)=>{
+                    return(
+                        <NavLink key={data.name} to={`${routes.emails.path}/${data.name}`}>
+                            <ListItem key={data.name} style={ type === data.name.toLowerCase() ? {
+                                backgroundColor: '#d3e3fd',
+                                borderRadius:'0 16px 16px 0'
+                            } : {} }>
+                                <data.icon fontSize='small'/> {data.title}
+                            </ListItem>
+                        </NavLink>
+                    )
+                })
+            }
+        </List>
+        <ComposeMail openDialog={openDialog} setOpenDialog={setOpenDialog}/>
+    </Container>
+  )
+}
+
+export default SideBarContent
